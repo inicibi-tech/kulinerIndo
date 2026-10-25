@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Dev Kuliner Indonesia - Tycoon Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Custom Glow Animations */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.6); }
+        }
+        .glow-orange {
+            animation: pulse-glow 3s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-orange-500 selection:text-white">
+
+    <!-- TOP NAVIGATION / HEADER STATS -->
+    <header class="sticky top-0 z-30 glass-card border-b border-slate-800 bg-slate-900/90 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Logo & Studio Name -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-orange-500/20">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-none text-white tracking-wide" id="studio-name-display">Warung Game Studio</h1>
+                    <span class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                        <i class="fa-solid fa-building text-orange-400"></i> Level Studio: <span id="studio-level-display" class="font-semibold text-slate-200">1 (Ruko Kecil)</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Global Dashboard Stats -->
+            <div class="flex items-center flex-wrap gap-3 sm:gap-6 text-sm">
+                <!-- Uang / Kas -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Kas Studio</div>
+                        <div class="font-extrabold text-emerald-400" id="stat-money">Rp 10.000.000</div>
+                    </div>
+                </div>
+
+                <!-- Fans / Reputasi -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Fans Studio</div>
+                        <div class="font-extrabold text-rose-400" id="stat-fans">0 Fans</div>
+                    </div>
+                </div>
+
+                <!-- Total Download -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Total Download</div>
+                        <div class="font-extrabold text-sky-400" id="stat-downloads">0</div>
+                    </div>
+                </div>
+
+                <!-- Tim / Karyawan -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Karyawan</div>
+                        <div class="font-extrabold text-amber-400" id="stat-staff">1 / 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sound & Settings Buttons -->
+            <div class="flex items-center gap-2">
+                <button id="btn-sound-toggle" onclick="toggleSound()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition" title="Toggle Sound">
+                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                </button>
+                <button onclick="openGitHubModal()" class="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 transition shadow-md shadow-indigo-600/30">
+                    <i class="fa-brands fa-github text-sm"></i> GitHub Deploy
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME DASHBOARD CONTAINER -->
+    <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- LEFT & CENTER COLUMN (Game Creation, Active Dev, Published Games) -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            
+            <!-- TAB NAVIGATION -->
+            <div class="flex border-b border-slate-800 gap-2">
+                <button id="tab-btn-dev" onclick="switchTab('dev')" class="px-4 py-2.5 text-sm font-semibold border-b-2 border-orange-500 text-orange-400 flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i> Pengembangan Game
+                </button>
+                <button id="tab-btn-portfolio" onclick="switchTab('portfolio')" class="px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-store"></i> Katalag & Penjualan (<span id="published-count">0</span>)
+                </button>
+            </div>
+
+            <!-- TAB 1: PENGEMBANGAN GAME -->
+            <div id="tab-content-dev" class="flex flex-col gap-6">
+                
+                <!-- CURRENT ACTIVE DEVELOPMENT SECTION -->
+                <div id="active-dev-card" class="glass-card p-5 rounded-2xl border border-slate-800 hidden relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-2xl" id="dev-dish-icon">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white flex items-center gap-2" id="dev-game-title">Game Kuliner Baru</h3>
+                                <span class="text-xs text-slate-400" id="dev-game-meta">Nasi Goreng • Android Platform</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold rounded-full animate-pulse flex items-center gap-1.5">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Sedang Dikerjakan...
+                        </span>
+                    </div>
+
+                    <!-- Progress Bars (Gameplay, Graphics, Sound, Bugs) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 font-semibold">
+                                <span class="text-slate-400"><i class="fa-solid fa-gamepad text-indigo-400 mr-1"></i> Gameplay & Logic</span>
+                                <span class="text-indigo-400" id="stat-dev-gameplay">0 pt</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="bar-dev-gameplay" class="bg-indigo-500 h-full w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 font-semibold">
+                                <span class="text-slate-400"><i class="fa-solid fa-paintbrush text-pink-400 mr-1"></i> Grafik & Visual</span>
+                                <span class="text-pink-400" id="stat-dev-graphics">0 pt</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="bar-dev-graphics" class="bg-pink-500 h-full w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 font-semibold">
+                                <span class="text-slate-400"><i class="fa-solid fa-music text-emerald-400 mr-1"></i> Audio & Musik</span>
+                                <span class="text-emerald-400" id="stat-dev-sound">0 pt</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="bar-dev-sound" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs mb-1 font-semibold">
+                                <span class="text-slate-400"><i class="fa-solid fa-bug text-rose-400 mr-1"></i> Bugs Ditemukan</span>
+                                <span class="text-rose-400" id="stat-dev-bugs">0 Bugs</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div id="bar-dev-bugs" class="bg-rose-500 h-full w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overall Progress & Publish Action -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold">
+                            <span class="text-slate-300">Total Progres Proyek Game</span>
+                            <span class="text-orange-400" id="dev-progress-percent">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-3.5 rounded-full p-0.5 overflow-hidden border border-slate-700">
+                            <div id="dev-overall-bar" class="bg-gradient-to-r from-orange-500 to-amber-400 h-full rounded-full w-0 transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 flex justify-end">
+                        <button id="btn-publish-game" disabled onclick="publishGame()" class="px-6 py-2.5 bg-slate-700 text-slate-500 cursor-not-allowed font-bold rounded-xl flex items-center gap-2 transition shadow-lg">
+                            <i class="fa-solid fa-rocket"></i> Rilis Game ke Publik
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CREATE NEW GAME FORM -->
+                <div id="create-game-card" class="glass-card p-5 sm:p-6 rounded-2xl border border-slate-800">
+                    <div class="flex items-center gap-3 mb-5 border-b border-slate-800 pb-3">
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Rancang proyek Game Kuliner Baru</h2>
+                            <p class="text-xs text-slate-400">Pilih ide masakan khas Indonesia dan targetkan pasar gamer lokal!</p>
+                        </div>
+                    </div>
+
+                    <form id="form-create-game" onsubmit="startNewGameDev(event)" class="space-y-5">
+                        
+                        <!-- Nama Game -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Judul Game Kuliner</label>
+                            <input type="text" id="input-title" required placeholder="Contoh: Nasi Goreng Tycoon 3D, Rendang Master..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500 transition">
+                        </div>
+
+                        <!-- Grid Genre Kuliner & Platform -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- Genre Masakan -->
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Tema / Genre Kuliner</label>
+                                <select id="select-genre" onchange="updateProjectCostEstimate()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500 transition">
+                                    <option value="nasgor" data-icon="fa-bowl-rice" data-cost="5000000">Nasi Goreng Sim (Biaya: Rp 5.000.000)</option>
+                                    <option value="bakso" data-icon="fa-utensils" data-cost="8000000">Bakso Solo Tycoon (Biaya: Rp 8.000.000)</option>
+                                    <option value="sate" data-icon="fa-fire" data-cost="12000000">Sate Madura Clicker (Biaya: Rp 12.000.000)</option>
+                                    <option value="rendang" data-icon="fa-drumstick-bite" data-cost="20000000">Rendang Padang RPG (Biaya: Rp 20.000.000)</option>
+                                    <option value="escendol" data-icon="fa-glass-water" data-cost="35000000">Es Cendol Cafe Idle (Biaya: Rp 35.000.000)</option>
+                                </select>
+                            </div>
+
+                            <!-- Target Platform -->
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Target Platform</label>
+                                <select id="select-platform" onchange="updateProjectCostEstimate()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-orange-500 transition">
+                                    <option value="android" data-mult="1.0">Android Play Store (Biaya 1x)</option>
+                                    <option value="ios" data-mult="1.5">iOS App Store (Biaya 1.5x)</option>
+                                    <option value="pc" data-mult="2.2">PC Steam Store (Biaya 2.2x)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Budget Alokasi Marketing -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-xs font-bold uppercase tracking-wider text-slate-300">Alokasi Budget Promosi / Hype Marketing</label>
+                                <span class="text-xs font-bold text-emerald-400" id="marketing-budget-val">Rp 2.000.000</span>
+                            </div>
+                            <input type="range" id="input-marketing" min="1000000" max="50000000" step="1000000" value="2000000" oninput="updateProjectCostEstimate()" class="w-full accent-orange-500 bg-slate-800 rounded-lg h-2 cursor-pointer">
+                            <p class="text-[11px] text-slate-400 mt-1">Semakin tinggi budget marketing, semakin tinggi daya tarik download saat game baru rilis!</p>
+                        </div>
+
+                        <!-- Summary Cost & Action -->
+                        <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Total Estimasi Modal Biaya:</span>
+                                <span class="text-xl font-extrabold text-amber-400" id="total-project-cost">Rp 7.000.000</span>
+                            </div>
+
+                            <button type="submit" id="btn-start-dev" class="px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-orange-500/20 transition flex items-center gap-2">
+                                <i class="fa-solid fa-hammer"></i> Mulai Produksi Game
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- TAB 2: PORTFOLIO & KATALOG GAME PUBLISHED -->
+            <div id="tab-content-portfolio" class="hidden flex flex-col gap-4">
+                <div id="published-games-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Dynamic List of Published Games -->
+                    <div class="col-span-full glass-card p-8 rounded-2xl text-center text-slate-400 border border-slate-800">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 text-slate-600"></i>
+                        <p class="text-sm">Belum ada game yang dirilis ke pasaran. Buat dan rilis game pertamamu sekarang!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN (Staff Recruitment, Upgrades, News/Logs) -->
+        <div class="flex flex-col gap-6">
+
+            <!-- REKRUTMEN TIM & KARYAWAN -->
+            <div class="glass-card p-5 rounded-2xl border border-slate-800">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-user-plus text-amber-400 text-lg"></i>
+                        <h3 class="font-bold text-white text-base">Rekrut Tim Dev</h3>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 bg-slate-800 text-slate-300 rounded-full border border-slate-700 font-semibold" id="staff-limit-badge">1/3 Anggota</span>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Programmer -->
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <i class="fa-solid fa-code text-indigo-400 text-xs"></i> Programmer Junior
+                            </div>
+                            <div class="text-xs text-slate-400 mt-0.5">+3 Point Logic/detik</div>
+                            <div class="text-[11px] text-amber-400 font-semibold mt-0.5">Gaji: Rp 1.500.000/bln</div>
+                        </div>
+                        <button onclick="hireStaff('programmer')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-600 rounded-lg transition">
+                            Rekrut (Rp 5jt)
+                        </button>
+                    </div>
+
+                    <!-- Designer Visual -->
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <i class="fa-solid fa-paintbrush text-pink-400 text-xs"></i> Artist & Designer
+                            </div>
+                            <div class="text-xs text-slate-400 mt-0.5">+3 Point Graphic/detik</div>
+                            <div class="text-[11px] text-amber-400 font-semibold mt-0.5">Gaji: Rp 1.500.000/bln</div>
+                        </div>
+                        <button onclick="hireStaff('designer')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-600 rounded-lg transition">
+                            Rekrut (Rp 5jt)
+                        </button>
+                    </div>
+
+                    <!-- Sound Engineer -->
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <i class="fa-solid fa-music text-emerald-400 text-xs"></i> Sound Composer
+                            </div>
+                            <div class="text-xs text-slate-400 mt-0.5">+3 Point Audio/detik</div>
+                            <div class="text-[11px] text-amber-400 font-semibold mt-0.5">Gaji: Rp 1.500.000/bln</div>
+                        </div>
+                        <button onclick="hireStaff('sound')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-600 rounded-lg transition">
+                            Rekrut (Rp 5jt)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPGRADE STUDIO & PERALATAN -->
+            <div class="glass-card p-5 rounded-2xl border border-slate-800">
+                <div class="flex items-center gap-2.5 mb-4 border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-laptop-code text-sky-400 text-lg"></i>
+                    <h3 class="font-bold text-white text-base">Upgrade Fasilitas Studio</h3>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Upgrade Office -->
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-sm font-bold text-white" id="upgrade-office-title">Gedung Studio Ruko</div>
+                            <div class="text-xs text-slate-400 mt-0.5" id="upgrade-office-desc">Tambah kapasitas max staff</div>
+                        </div>
+                        <button id="btn-upgrade-office" onclick="upgradeOffice()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white rounded-lg transition shadow-md shadow-sky-600/20">
+                            Rp 25.000.000
+                        </button>
+                    </div>
+
+                    <!-- Upgrade PC Rig -->
+                    <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-2">
+                        <div>
+                            <div class="text-sm font-bold text-white" id="upgrade-pc-title">Spek PC Dev RTX High</div>
+                            <div class="text-xs text-slate-400 mt-0.5">+20% Kecepatan Pengerjaan</div>
+                        </div>
+                        <button id="btn-upgrade-pc" onclick="upgradePC()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white rounded-lg transition shadow-md shadow-sky-600/20">
+                            Rp 15.000.000
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOG AKTIVITAS & BERITA RANDOM -->
+            <div class="glass-card p-5 rounded-2xl border border-slate-800 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-rose-400"></i>
+                        <h3 class="font-bold text-white text-sm">Kabar & Event Studio</h3>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                </div>
+                
+                <div id="news-log" class="space-y-2 text-xs text-slate-300 overflow-y-auto max-h-48 pr-1">
+                    <div class="p-2 rounded bg-slate-900/50 border border-slate-800/80">
+                        <span class="text-slate-500 text-[10px]">Sistem</span> Selamat datang di Tycoon Developer Game Kuliner! Rancang game kulinermu sekarang.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-3 px-4 text-center text-xs text-slate-500">
+        Studio Game Simulator Indonesia • Dibuat khusus untuk Siap Main & Deploy GitHub Pages.
+    </footer>
+
+    <!-- MODAL GITHUB DEPLOYMENT INSTRUCTIONS -->
+    <div id="github-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <button onclick="closeGitHubModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-2xl">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">Cara Deploy Game Ini ke GitHub Pages Gratis!</h2>
+                    <p class="text-xs text-slate-400">Hanya butuh 3 menit tanpa perlu server paid/install software.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                    <span class="font-bold text-orange-400 block mb-1 text-sm">Langkah 1: Simpan Kode Game</span>
+                    <p>Copy seluruh kode file HTML ini dan simpan di komputer kamu dengan nama file <b><code class="text-indigo-300 bg-slate-900 px-1.5 py-0.5 rounded">index.html</code></b>.</p>
+                </div>
+
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                    <span class="font-bold text-orange-400 block mb-1 text-sm">Langkah 2: Buat Repository di GitHub</span>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Buka halaman <b>github.com</b> lalu buat akun / login.</li>
+                        <li>Klik tombol hijau <b>"New Repository"</b>.</li>
+                        <li>Beri nama repository (misal: <code class="text-indigo-300 bg-slate-900 px-1.5 py-0.5 rounded">kuliner-game-tycoon</code>).</li>
+                        <li>Pastikan centang opsi <b>Public</b>, lalu klik <b>Create repository</b>.</li>
+                    </ol>
+                </div>
+
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                    <span class="font-bold text-orange-400 block mb-1 text-sm">Langkah 3: Upload File index.html</span>
+                    <p>Di dalam repository baru tersebut, klik link <b>"uploading an existing file"</b>. Drag and drop file <code class="text-indigo-300 bg-slate-900 px-1.5 py-0.5 rounded">index.html</code> kamu, lalu klik tombol hijau <b>Commit Changes</b>.</p>
+                </div>
+
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700">
+                    <span class="font-bold text-orange-400 block mb-1 text-sm">Langkah 4: Aktifkan GitHub Pages</span>
+                    <ol class="list-decimal list-inside space-y-1">
+                        <li>Masuk ke menu tab <b>Settings</b> di repository tersebut.</li>
+                        <li>Klik menu <b>Pages</b> di sidebar sebelah kiri.</li>
+                        <li>Pada bagian <b>Build and deployment</b> -> <b>Branch</b>, ubah dari <i>None</i> menjadi <b>main</b> (atau master) lalu klik <b>Save</b>.</li>
+                        <li>Tunggu 1-2 menit, lalu refresh halaman. Kamu akan mendapatkan URL link live game kamu! 🎉</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeGitHubModal()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 font-bold text-white rounded-xl text-xs transition">
+                    Saya Mengerti, Kembali ke Game
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- GAME LOGIC ENGINE JS -->
+    <script>
+        /* ------------------------------------------------------------------
+           GAME STATE & VARIABLES
+        ------------------------------------------------------------------ */
+        let gameState = {
+            money: 10000000,
+            fans: 0,
+            totalDownloads: 0,
+            studioLevel: 1, // 1: Ruko, 2: Gedung Kecil, 3: Highrise HQ
+            pcLevel: 1,
+            staff: {
+                programmer: 0,
+                designer: 0,
+                sound: 0
+            },
+            maxStaff: 3,
+            activeDev: null, // Object if developing game
+            publishedGames: [],
+            soundEnabled: true
+        };
+
+        const GENRE_CONFIG = {
+            nasgor: { name: 'Nasi Goreng Sim', icon: 'fa-bowl-rice', baseCost: 5000000, reqLogic: 40, reqGraphic: 30, reqSound: 20 },
+            bakso: { name: 'Bakso Solo Tycoon', icon: 'fa-utensils', baseCost: 8000000, reqLogic: 60, reqGraphic: 50, reqSound: 30 },
+            sate: { name: 'Sate Madura Clicker', icon: 'fa-fire', baseCost: 12000000, reqLogic: 90, reqGraphic: 70, reqSound: 50 },
+            rendang: { name: 'Rendang Padang RPG', icon: 'fa-drumstick-bite', baseCost: 20000000, reqLogic: 140, reqGraphic: 120, reqSound: 90 },
+            escendol: { name: 'Es Cendol Cafe Idle', icon: 'fa-glass-water', baseCost: 35000000, reqLogic: 200, reqGraphic: 180, reqSound: 140 }
+        };
+
+        const PLATFORM_CONFIG = {
+            android: { name: 'Android', multiplier: 1.0 },
+            ios: { name: 'iOS App Store', multiplier: 1.5 },
+            pc: { name: 'PC Steam', multiplier: 2.2 }
+        };
+
+        // Web Audio Synth FX
+        let audioCtx = null;
+
+        function playBeep(freq = 440, type = 'sine', duration = 0.1) {
+            if (!gameState.soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        /* ------------------------------------------------------------------
+           INIT & LOCALSTORAGE
+        ------------------------------------------------------------------ */
+        window.onload = function() {
+            loadGame();
+            updateProjectCostEstimate();
+            updateUI();
+            
+            // Start Master Game Loop (Interval 1 sec)
+            setInterval(gameLoop, 1000);
+            
+            // Random Event Trigger Interval (Every 25 secs)
+            setInterval(triggerRandomEvent, 25000);
+        };
+
+        function saveGame() {
+            localStorage.setItem('kuliner_dev_tycoon_save', JSON.stringify(gameState));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('kuliner_dev_tycoon_save');
+            if (saved) {
+                try {
+                    gameState = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Failed load save data");
+                }
+            }
+        }
+
+        /* ------------------------------------------------------------------
+           UI TAB & NAVIGATION
+        ------------------------------------------------------------------ */
+        function switchTab(tab) {
+            playBeep(600, 'sine', 0.05);
+            const devTab = document.getElementById('tab-content-dev');
+            const portTab = document.getElementById('tab-content-portfolio');
+            const devBtn = document.getElementById('tab-btn-dev');
+            const portBtn = document.getElementById('tab-btn-portfolio');
+
+            if (tab === 'dev') {
+                devTab.classList.remove('hidden');
+                portTab.classList.add('hidden');
+                devBtn.className = "px-4 py-2.5 text-sm font-semibold border-b-2 border-orange-500 text-orange-400 flex items-center gap-2";
+                portBtn.className = "px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2";
+            } else {
+                devTab.classList.add('hidden');
+                portTab.classList.remove('hidden');
+                devBtn.className = "px-4 py-2.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2";
+                portBtn.className = "px-4 py-2.5 text-sm font-semibold border-b-2 border-orange-500 text-orange-400 flex items-center gap-2";
+            }
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (gameState.soundEnabled) {
+                icon.className = "fa-solid fa-volume-high";
+                showToast("Suara diaktifkan", "info");
+                playBeep(800, 'triangle', 0.1);
+            } else {
+                icon.className = "fa-solid fa-volume-xmark";
+                showToast("Suara dimatikan", "info");
+            }
+        }
+
+        /* ------------------------------------------------------------------
+           GAME PRODUCTION LOGIC
+        ------------------------------------------------------------------ */
+        function updateProjectCostEstimate() {
+            const genreKey = document.getElementById('select-genre').value;
+            const platformKey = document.getElementById('select-platform').value;
+            const marketingCost = parseInt(document.getElementById('input-marketing').value);
+
+            const genre = GENRE_CONFIG[genreKey];
+            const platform = PLATFORM_CONFIG[platformKey];
+
+            const totalCost = Math.round((genre.baseCost * platform.multiplier) + marketingCost);
+            
+            document.getElementById('marketing-budget-val').innerText = 'Rp ' + marketingCost.toLocaleString('id-ID');
+            document.getElementById('total-project-cost').innerText = 'Rp ' + totalCost.toLocaleString('id-ID');
+            
+            return totalCost;
+        }
+
+        function startNewGameDev(e) {
+            e.preventDefault();
+            
+            if (gameState.activeDev) {
+                showToast("Masih ada proyek game yang sedang berjalan!", "error");
+                return;
+            }
+
+            const title = document.getElementById('input-title').value.trim();
+            const genreKey = document.getElementById('select-genre').value;
+            const platformKey = document.getElementById('select-platform').value;
+            const marketingBudget = parseInt(document.getElementById('input-marketing').value);
+            
+            const cost = updateProjectCostEstimate();
+
+            if (gameState.money < cost) {
+                showToast("Uang/Kas studio tidak mencukupi!", "error");
+                return;
+            }
+
+            // Deduct Money
+            gameState.money -= cost;
+            playBeep(523, 'square', 0.15);
+
+            const genre = GENRE_CONFIG[genreKey];
+
+            gameState.activeDev = {
+                title: title,
+                genreKey: genreKey,
+                platformKey: platformKey,
+                marketingBudget: marketingBudget,
+                cost: cost,
+                
+                // Target Points
+                reqLogic: genre.reqLogic,
+                reqGraphic: genre.reqGraphic,
+                reqSound: genre.reqSound,
+
+                // Current Progress
+                curLogic: 0,
+                curGraphic: 0,
+                curSound: 0,
+                bugs: 0
+            };
+
+            showToast("Proyek game " + title + " dimulai!", "success");
+            addNewsLog("Memulai pengembangan game baru: " + title);
+            
+            document.getElementById('input-title').value = '';
+            updateUI();
+            saveGame();
+        }
+
+        function publishGame() {
+            if (!gameState.activeDev) return;
+
+            const dev = gameState.activeDev;
+
+            // Calculate Game Score & Quality (1 - 10 Rating)
+            const bugPenalty = dev.bugs * 0.2;
+            const rawScore = 6 + (gameState.pcLevel * 0.5) + (Math.random() * 2.5) - bugPenalty;
+            const rating = Math.min(10, Math.max(2.0, parseFloat(rawScore.toFixed(1))));
+
+            // Revenue potential per sec
+            const baseIncome = (dev.cost * 0.00008) * (rating / 5) * PLATFORM_CONFIG[dev.platformKey].multiplier;
+            
+            // New Fans acquired
+            const newFans = Math.round((dev.marketingBudget / 50000) * (rating / 5));
+            gameState.fans += newFans;
+
+            // Initial Downloads
+            const initDownloads = Math.round((dev.marketingBudget / 1000) * (rating / 4));
+            gameState.totalDownloads += initDownloads;
+
+            const newGame = {
+                id: Date.now(),
+                title: dev.title,
+                genre: GENRE_CONFIG[dev.genreKey].name,
+                icon: GENRE_CONFIG[dev.genreKey].icon,
+                platform: PLATFORM_CONFIG[dev.platformKey].name,
+                rating: rating,
+                passiveIncome: baseIncome,
+                totalEarned: 0,
+                downloads: initDownloads,
+                releaseDate: new Date().toLocaleDateString('id-ID')
+            };
+
+            gameState.publishedGames.unshift(newGame);
+            gameState.activeDev = null;
+
+            playBeep(880, 'triangle', 0.3);
+            showToast(`Game "${newGame.title}" resmi dirilis dengan Rating ${rating}/10!`, "success");
+            addNewsLog(`RILIS! Game ${newGame.title} berating ${rating}/10 berhasil meluncur ke pasaran.`);
+
+            updateUI();
+            saveGame();
+        }
+
+        /* ------------------------------------------------------------------
+           STAFF RECRUITMENT & UPGRADES
+        ------------------------------------------------------------------ */
+        function hireStaff(type) {
+            const currentTotal = gameState.staff.programmer + gameState.staff.designer + gameState.staff.sound;
+            
+            if (currentTotal >= gameState.maxStaff) {
+                showToast("Kapasitas kantor penuh! Upgrade gedung studio lebih dulu.", "error");
+                return;
+            }
+
+            const hireCost = 5000000;
+            if (gameState.money < hireCost) {
+                showToast("Uang kas kurang untuk merekrut staf!", "error");
+                return;
+            }
+
+            gameState.money -= hireCost;
+            gameState.staff[type]++;
+            
+            playBeep(650, 'sine', 0.1);
+            showToast(`Berhasil merekrut staf ${type}!`, "success");
+            addNewsLog(`Rekrutmen: Staf ${type} baru saja bergabung ke tim.`);
+            
+            updateUI();
+            saveGame();
+        }
+
+        function upgradeOffice() {
+            const cost = gameState.studioLevel === 1 ? 25000000 : 75000000;
+            if (gameState.money < cost) {
+                showToast("Uang tidak cukup untuk upgrade kantor!", "error");
+                return;
+            }
+
+            gameState.money -= cost;
+            gameState.studioLevel++;
+            gameState.maxStaff += 3;
+
+            playBeep(700, 'triangle', 0.2);
+            showToast("Kantor studio berhasil di-upgrade!", "success");
+            addNewsLog(`Studio ditingkatkan ke Level ${gameState.studioLevel}!`);
+
+            updateUI();
+            saveGame();
+        }
+
+        function upgradePC() {
+            const cost = gameState.pcLevel * 15000000;
+            if (gameState.money < cost) {
+                showToast("Uang tidak cukup untuk upgrade PC Rigs!", "error");
+                return;
+            }
+
+            gameState.money -= cost;
+            gameState.pcLevel++;
+
+            playBeep(750, 'sine', 0.15);
+            showToast("Peralatan Komputer PC Dev di-upgrade!", "success");
+            addNewsLog(`Upgrade: Peralatan PC Dev ditingkatkan ke Spesifikasi Gen-${gameState.pcLevel}.`);
+
+            updateUI();
+            saveGame();
+        }
+
+        /* ------------------------------------------------------------------
+           GAME LOOP & AUTOMATION (RUNS EVERY 1 SEC)
+        ------------------------------------------------------------------ */
+        function gameLoop() {
+            // 1. Process Active Game Dev Progress
+            if (gameState.activeDev) {
+                const dev = gameState.activeDev;
+                const pcSpeedMult = 1 + (gameState.pcLevel * 0.25);
+
+                // Point Gains
+                const logicGain = (2 + gameState.staff.programmer * 3) * pcSpeedMult;
+                const graphicGain = (2 + gameState.staff.designer * 3) * pcSpeedMult;
+                const soundGain = (1 + gameState.staff.sound * 3) * pcSpeedMult;
+
+                dev.curLogic = Math.min(dev.reqLogic, dev.curLogic + logicGain);
+                dev.curGraphic = Math.min(dev.reqGraphic, dev.curGraphic + graphicGain);
+                dev.curSound = Math.min(dev.reqSound, dev.curSound + soundGain);
+
+                // Chance to spawn bug
+                if (Math.random() < 0.25) {
+                    dev.bugs++;
+                }
+            }
+
+            // 2. Passive Income from Published Games
+            let passiveTotal = 0;
+            gameState.publishedGames.forEach(game => {
+                // Passive earnings grow with studio fans
+                const fanBonus = 1 + (gameState.fans * 0.0005);
+                const currentIncome = Math.round(game.passiveIncome * fanBonus);
+                
+                game.totalEarned += currentIncome;
+                passiveTotal += currentIncome;
+
+                // Download growth
+                if (Math.random() < 0.4) {
+                    const newDl = Math.round(game.rating * (1 + Math.random() * 3));
+                    game.downloads += newDl;
+                    gameState.totalDownloads += newDl;
+                }
+            });
+
+            gameState.money += passiveTotal;
+
+            // 3. Monthly Staff Salary Deductions (Every 30 seconds approx simulation)
+            if (Math.random() < 0.033) {
+                const totalStaff = gameState.staff.programmer + gameState.staff.designer + gameState.staff.sound;
+                const totalSalary = totalStaff * 1500000;
+                if (totalSalary > 0) {
+                    gameState.money -= totalSalary;
+                    addNewsLog(`Gaji Bulanan: Pembayaran gaji ${totalStaff} karyawan sebesar Rp ${totalSalary.toLocaleString('id-ID')}.`);
+                }
+            }
+
+            updateUI();
+        }
+
+        /* ------------------------------------------------------------------
+           RANDOM EVENTS
+        ------------------------------------------------------------------ */
+        function triggerRandomEvent() {
+            const events = [
+                {
+                    text: "Streamer populer 'Windah' memainkan game kuliner kamu di live stream!",
+                    effect: () => {
+                        const fanGain = Math.floor(Math.random() * 150) + 50;
+                        gameState.fans += fanGain;
+                        showToast(`Event Viral! Streamer mempromosikan game kamu (+${fanGain} Fans)`, "success");
+                        addNewsLog(`VIRAL: Streamer terkenal memainkan game kamu! Fans bertambah +${fanGain}.`);
+                    }
+                },
+                {
+                    text: "Reviewer berikan ulasan pedas karena ada kendala bug!",
+                    effect: () => {
+                        if (gameState.publishedGames.length > 0) {
+                            const loss = Math.floor(Math.random() * 30) + 10;
+                            gameState.fans = Math.max(0, gameState.fans - loss);
+                            showToast(`Ulasan Pedas! Fans berkurang -${loss}`, "error");
+                            addNewsLog(`EVENT: Gamer memberikan ulasan kritikal di forum komplain bug.`);
+                        }
+                    }
+                },
+                {
+                    text: "Mendapat dana hibah insentif dari Asosiasi Game Lokal!",
+                    effect: () => {
+                        const bonus = 5000000;
+                        gameState.money += bonus;
+                        showToast(`Bonus Hibah Game Dev! (+Rp 5.000.000)`, "success");
+                        addNewsLog(`BONUS: Studio menerima dana bantuan hibah pengembangan game sebesar Rp 5.000.000.`);
+                    }
+                }
+            ];
+
+            const ev = events[Math.floor(Math.random() * events.length)];
+            ev.effect();
+            updateUI();
+            saveGame();
+        }
+
+        /* ------------------------------------------------------------------
+           UI RENDER / UPDATE ENGINE
+        ------------------------------------------------------------------ */
+        function updateUI() {
+            // Stats Header
+            document.getElementById('stat-money').innerText = 'Rp ' + Math.max(0, gameState.money).toLocaleString('id-ID');
+            document.getElementById('stat-fans').innerText = gameState.fans.toLocaleString('id-ID') + ' Fans';
+            document.getElementById('stat-downloads').innerText = gameState.totalDownloads.toLocaleString('id-ID');
+            
+            const totalStaff = gameState.staff.programmer + gameState.staff.designer + gameState.staff.sound;
+            document.getElementById('stat-staff').innerText = `${totalStaff} / ${gameState.maxStaff}`;
+            document.getElementById('staff-limit-badge').innerText = `${totalStaff}/${gameState.maxStaff} Anggota`;
+
+            // Studio level display
+            const studioTitles = ["Level 1 (Ruko Kecil)", "Level 2 (Gedung Ruko 3 Lantai)", "Level 3 (Highrise HQ Studio)"];
+            document.getElementById('studio-level-display').innerText = studioTitles[gameState.studioLevel - 1] || "Level Max";
+
+            // Active Dev Display
+            const devCard = document.getElementById('active-dev-card');
+            const createCard = document.getElementById('create-game-card');
+
+            if (gameState.activeDev) {
+                devCard.classList.remove('hidden');
+                createCard.classList.add('hidden');
+
+                const dev = gameState.activeDev;
+                document.getElementById('dev-game-title').innerText = dev.title;
+                document.getElementById('dev-game-meta').innerText = `${GENRE_CONFIG[dev.genreKey].name} • Platform ${PLATFORM_CONFIG[dev.platformKey].name}`;
+                document.getElementById('dev-dish-icon').innerHTML = `<i class="fa-solid ${GENRE_CONFIG[dev.genreKey].icon}"></i>`;
+
+                // Progress points
+                document.getElementById('stat-dev-gameplay').innerText = `${Math.round(dev.curLogic)} / ${dev.reqLogic} pt`;
+                document.getElementById('bar-dev-gameplay').style.width = `${(dev.curLogic / dev.reqLogic) * 100}%`;
+
+                document.getElementById('stat-dev-graphics').innerText = `${Math.round(dev.curGraphic)} / ${dev.reqGraphic} pt`;
+                document.getElementById('bar-dev-graphics').style.width = `${(dev.curGraphic / dev.reqGraphic) * 100}%`;
+
+                document.getElementById('stat-dev-sound').innerText = `${Math.round(dev.curSound)} / ${dev.reqSound} pt`;
+                document.getElementById('bar-dev-sound').style.width = `${(dev.curSound / dev.reqSound) * 100}%`;
+
+                document.getElementById('stat-dev-bugs').innerText = `${dev.bugs} Bugs`;
+                document.getElementById('bar-dev-bugs').style.width = `${Math.min(100, dev.bugs * 10)}%`;
+
+                // Overall progress
+                const totalReq = dev.reqLogic + dev.reqGraphic + dev.reqSound;
+                const totalCur = dev.curLogic + dev.curGraphic + dev.curSound;
+                const percent = Math.floor((totalCur / totalReq) * 100);
+
+                document.getElementById('dev-progress-percent').innerText = `${percent}%`;
+                document.getElementById('dev-overall-bar').style.width = `${percent}%`;
+
+                const btnPublish = document.getElementById('btn-publish-game');
+                if (percent >= 100) {
+                    btnPublish.disabled = false;
+                    btnPublish.className = "px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-extrabold rounded-xl flex items-center gap-2 transition shadow-lg shadow-emerald-500/20 cursor-pointer animate-bounce";
+                } else {
+                    btnPublish.disabled = true;
+                    btnPublish.className = "px-6 py-2.5 bg-slate-800 text-slate-500 cursor-not-allowed font-bold rounded-xl flex items-center gap-2 transition";
+                }
+
+            } else {
+                devCard.classList.add('hidden');
+                createCard.classList.remove('hidden');
+            }
+
+            // Published Games Count & List
+            document.getElementById('published-count').innerText = gameState.publishedGames.length;
+            renderPublishedGames();
+
+            // Upgrade Buttons state
+            const btnUpOffice = document.getElementById('btn-upgrade-office');
+            if (gameState.studioLevel >= 3) {
+                btnUpOffice.disabled = true;
+                btnUpOffice.innerText = "MAX LEVEL";
+                btnUpOffice.className = "px-3 py-1.5 bg-slate-800 text-slate-500 text-xs font-bold rounded-lg cursor-not-allowed";
+            } else {
+                const cost = gameState.studioLevel === 1 ? 25000000 : 75000000;
+                btnUpOffice.innerText = 'Rp ' + (cost / 1000000) + 'jt';
+            }
+
+            const btnUpPc = document.getElementById('btn-upgrade-pc');
+            document.getElementById('upgrade-pc-title').innerText = `Spek PC Dev Gen-${gameState.pcLevel}`;
+            btnUpPc.innerText = 'Rp ' + ((gameState.pcLevel * 15000000) / 1000000) + 'jt';
+        }
+
+        function renderPublishedGames() {
+            const container = document.getElementById('published-games-list');
+            if (gameState.publishedGames.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full glass-card p-8 rounded-2xl text-center text-slate-400 border border-slate-800">
+                        <i class="fa-solid fa-box-open text-4xl mb-3 text-slate-600"></i>
+                        <p class="text-sm">Belum ada game yang dirilis. Buat dan terbitkan game pertamamu!</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            gameState.publishedGames.forEach(g => {
+                html += `
+                    <div class="glass-card p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-9 h-9 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg">
+                                        <i class="fa-solid ${g.icon}"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-white text-sm line-clamp-1">${g.title}</h4>
+                                        <span class="text-[10px] text-slate-400">${g.genre} • ${g.platform}</span>
+                                    </div>
+                                </div>
+                                <div class="px-2 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 font-extrabold text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-star text-[10px]"></i> ${g.rating}
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 my-3 p-2 bg-slate-900/60 rounded-lg text-xs">
+                                <div>
+                                    <span class="text-slate-400 block text-[10px]">Total Download</span>
+                                    <span class="font-bold text-sky-400"><i class="fa-solid fa-download mr-1"></i>${g.downloads.toLocaleString('id-ID')}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block text-[10px]">Total Revenue</span>
+                                    <span class="font-bold text-emerald-400"><i class="fa-solid fa-coins mr-1"></i>Rp ${Math.round(g.totalEarned).toLocaleString('id-ID')}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-[10px] text-slate-500 flex justify-between items-center border-t border-slate-800/80 pt-2">
+                            <span>Rilis: ${g.releaseDate}</span>
+                            <span class="text-emerald-400 font-semibold">+Rp ${Math.round(g.passiveIncome).toLocaleString('id-ID')}/detik</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        /* ------------------------------------------------------------------
+           HELPERS: TOAST NOTIFICATION & NEWS LOG
+        ------------------------------------------------------------------ */
+        function showToast(msg, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bg = "bg-slate-800 border-slate-700 text-slate-200";
+            if (type === "success") bg = "bg-emerald-900/90 border-emerald-500/50 text-emerald-200";
+            if (type === "error") bg = "bg-rose-900/90 border-rose-500/50 text-rose-200";
+
+            toast.className = `px-4 py-2.5 rounded-xl border ${bg} text-xs font-semibold shadow-xl flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto max-w-sm`;
+            toast.innerHTML = `<i class="fa-solid fa-circle-info"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function addNewsLog(text) {
+            const container = document.getElementById('news-log');
+            const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
+            const logItem = document.createElement('div');
+            logItem.className = "p-2 rounded bg-slate-900/60 border border-slate-800/80 text-[11px] leading-relaxed";
+            logItem.innerHTML = `<span class="text-slate-500 text-[10px] block mb-0.5">[${time}]</span> ${text}`;
+
+            container.prepend(logItem);
+
+            if (container.children.length > 20) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        function openGitHubModal() {
+            playBeep(500, 'sine', 0.05);
+            document.getElementById('github-modal').classList.remove('hidden');
+        }
+
+        function closeGitHubModal() {
+            playBeep(400, 'sine', 0.05);
+            document.getElementById('github-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
